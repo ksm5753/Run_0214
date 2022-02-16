@@ -39,8 +39,8 @@ public class Player : MonoBehaviour
 
         if (this.isMe)
         {
-            CM.Follow = this.transform.GetChild(0).transform;
-            CM.LookAt = this.transform.GetChild(0).transform;
+            CM.Follow = this.transform.transform;
+            CM.LookAt = this.transform.transform;
         }
 
         this.isLive = true;
@@ -60,14 +60,14 @@ public class Player : MonoBehaviour
     {
         SetMoveVector(this.transform.forward * move);
     }
+    float tx = 0;
     public void SetMoveVector(Vector3 vector)
     {
         moveVector = vector;
 
-        //if (vector == Vector3.zero)
-        //    isMove = false;
-        //else
-            isMove = true;
+        tx = moveVector.x;
+
+        isMove = true;
     }
 
     public void Move()
@@ -77,17 +77,17 @@ public class Player : MonoBehaviour
     public void Move(Vector3 var)
     {
         if (!isLive) return;
-        print("FDF");
 
         //회전
         if (var.Equals(Vector3.zero))
             isRotate = false;
         else
         {
-            if (Quaternion.Angle(playerObject.transform.rotation, Quaternion.LookRotation(var)) > Quaternion.kEpsilon)
-                isRotate = true;
-            else
-                isRotate = false;
+            //if (Quaternion.Angle(playerObject.transform.rotation, Quaternion.LookRotation(var)) > Quaternion.kEpsilon)
+            //    isRotate = true;
+            //else
+            //    isRotate = false;
+            isRotate = true;
         }
 
         //이동
@@ -102,14 +102,15 @@ public class Player : MonoBehaviour
             isRotate = false;
             return;
         }
-        if(Quaternion.Angle(playerObject.transform.rotation, Quaternion.LookRotation(moveVector)) < Quaternion.kEpsilon)
-        {
-            isRotate = false;
-            return;
-        }
+        //if(Quaternion.Angle(playerObject.transform.rotation, Quaternion.LookRotation(moveVector)) < Quaternion.kEpsilon)
+        //{
+        //    isRotate = false;
+        //    return;
+        //}
 
-        playerObject.transform.GetChild(0).rotation = Quaternion.Lerp(playerObject.transform.rotation, Quaternion.LookRotation(moveVector), Time.deltaTime * rotSpeed * 0.5f);
-        playerObject.transform.rotation = Quaternion.Euler(0, this.transform.GetChild(0).rotation.eulerAngles.y, 0);
+        playerObject.transform.Rotate(0, tx, 0);
+        //playerObject.transform.rotation = Quaternion.Lerp(playerObject.transform.rotation, Quaternion.LookRotation(moveVector), Time.deltaTime * rotSpeed * 0.5f);
+        //playerObject.transform.rotation = Quaternion.Euler(0, this.transform.GetChild(0).rotation.eulerAngles.y, 0);
     }
 
     public void SetPosition(Vector3 pos)
